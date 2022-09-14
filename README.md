@@ -9,6 +9,8 @@
  <p align="right"> <strong> طريقة الاستعمال </strong> </p>
 
 ```
+git clone https://github.com/abdurahman-ghazi/markdown-arabic-vue
+cd markdown-arabic-vue
 yarn
 yarn dev
 ```
