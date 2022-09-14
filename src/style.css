@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+  @font-face {
+    font-family:  'Cairo play';
+    src:  url('/fonts/Cairo_Play/static/CairoPlay-Regular.ttf');
+  }
+}
+
+body {
+  direction: rtl;
+}
