@@ -1,13 +1,15 @@
 <script setup>
 import { marked } from 'marked'
 import { debounce } from 'lodash-es'
+import DOMPurify from 'isomorphic-dompurify';
 import { ref, computed } from 'vue'
 
 // input word at start
 const input = ref('# بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ')
 
 // output input using computed function in vue
-const output = computed(() => marked(input.value))
+const output = computed(() => DOMPurify.sanitize(marked.parse(input.value)))
+
 
 // debounce input for 100 milisec to reduce overhead
 const update = debounce((e) => {
