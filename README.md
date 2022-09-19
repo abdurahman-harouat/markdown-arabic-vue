@@ -15,8 +15,8 @@ yarn dev
 
  <p align="right"> <strong> المميزات </strong> </p>
 
-<p align="right"> <strong> - يدعم اللغة العربية و الاجنبية  </strong> </p>
-<p align="right"> <strong> - آمن ضد معضم هجمات XSS  </strong> </p>
+<p align="right"> - يدعم اللغة العربية و الاجنبية </p>
+<p align="right"> - آمن ضد معضم هجمات XSS </p>
 
 
 <h3 align="right">الادوات المستخدمة</h3>
