@@ -4,10 +4,19 @@
 
 @layer base{
   @font-face {
-    font-family:  'Cairo play';
-    src:  url('/fonts/Cairo_Play/static/CairoPlay-Regular.ttf');
+    font-family:  'Tajawal';
+    src:  url('/fonts/Tajawal/Tajawal-Regular.ttf');
+  }
+  @font-face {
+    font-family:  'Blaka INK';
+    src:  url('/fonts/Blaka_Ink/BlakaInk-Regular.ttf');
+  }
+  @font-face {
+    font-family:  'Reem Kufi Ink';
+    src:  url('/fonts/Reem_Kufi_Ink/ReemKufiInk-Regular.ttf');
   }
 }
+
 
 body {
   direction: rtl;

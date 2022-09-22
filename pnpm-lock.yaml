@@ -4,10 +4,12 @@ specifiers:
   '@tailwindcss/typography': ^0.5.7
   '@vitejs/plugin-vue': ^3.1.0
   autoprefixer: ^10.4.10
+  highlight.js: ^11.6.0
   isomorphic-dompurify: ^0.22.0
   lodash-es: ^4.17.21
   marked: ^4.1.0
   postcss: ^8.4.16
+  prismjs: ^1.29.0
   tailwind-scrollbar: ^2.0.1
   tailwindcss: ^3.1.8
   typescript: ^4.6.4
@@ -17,9 +19,11 @@ specifiers:
   vue-tsc: ^0.40.4
 
 dependencies:
+  highlight.js: 11.6.0
   isomorphic-dompurify: 0.22.0
   lodash-es: 4.17.21
   marked: 4.1.0
+  prismjs: 1.29.0
   vue: 3.2.39
   vue-composable: 1.0.0-beta.24
 
@@ -831,6 +835,11 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /highlight.js/11.6.0:
+    resolution: {integrity: sha512-ig1eqDzJaB0pqEvlPVIpSSyMaO92bH1N2rJpLMN/nX396wTpDA4Eq0uK+7I/2XG17pFaaKE0kjV/XPeGt7Evjw==}
+    engines: {node: '>=12.0.0'}
+    dev: false
+
   /html-encoding-sniffer/3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
     engines: {node: '>=12'}
@@ -1170,6 +1179,11 @@ packages:
   /prelude-ls/1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
     engines: {node: '>= 0.8.0'}
+    dev: false
+
+  /prismjs/1.29.0:
+    resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
+    engines: {node: '>=6'}
     dev: false
 
   /psl/1.9.0:

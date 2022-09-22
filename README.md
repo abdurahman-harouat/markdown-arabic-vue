@@ -9,14 +9,15 @@
 ```
 git clone https://github.com/abdurahman-ghazi/markdown-arabic-vue
 cd markdown-arabic-vue
-yarn
-yarn dev
+pnpm install
+pnpm dev
 ```
 
  <p align="right"> <strong> المميزات </strong> </p>
 
 <p align="right"> - يدعم اللغة العربية و الاجنبية </p>
 <p align="right"> - آمن ضد معضم هجمات XSS </p>
+<p align="right"> - تحفظ المعلومات في localStorage </p>
 
 
 <h3 align="right">الادوات المستخدمة</h3>

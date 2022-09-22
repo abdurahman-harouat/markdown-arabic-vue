@@ -7,7 +7,9 @@ module.exports = {
   theme: {
     extend: {
         fontFamily:{
-          cairoplay: 'Cairo play, cursive'
+          tajawal: ['Tajawal, sans-serif'],
+          blakaink: ['Blaka Ink, cursive'],
+          reemkufiink: ['Reem Kufi Ink, sans-serif'],
         },
     },
   },
