@@ -2,7 +2,12 @@
 
  <p align="right">:fire: ماركداون بالعربي ادات جديدة رائعة لاخذ الملاحظات و تصميمها جميل </p>
 
-![اقراني](screenshot/readme.png)
+![اقراني](screenshot/view.png)
+
+---
+
+![اقراني](screenshot/edit.png)
+
 
  <p align="right"> <strong> طريقة الاستعمال </strong> </p>
 
