@@ -1,10 +1,10 @@
 <script setup>
-import MarkdownArabic from './components/MarkdownArabic.vue'
+import MarkdownArabic from "./components/MarkdownArabic.vue";
+/*import Motion from "./components/Motion.vue";*/
 </script>
 
 <template>
-  <MarkdownArabic />
+   <MarkdownArabic />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

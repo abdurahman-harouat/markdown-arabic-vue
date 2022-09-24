@@ -11,6 +11,7 @@ specifiers:
   marked: ^4.1.0
   motion: ^10.14.2
   postcss: ^8.4.16
+  prettier: ^2.7.1
   prismjs: ^1.29.0
   tailwind-scrollbar: ^2.0.1
   tailwindcss: ^3.1.8
@@ -36,6 +37,7 @@ devDependencies:
   '@vitejs/plugin-vue': 3.1.0_vite@3.1.3+vue@3.2.39
   autoprefixer: 10.4.11_postcss@8.4.16
   postcss: 8.4.16
+  prettier: 2.7.1
   tailwind-scrollbar: 2.0.1_tailwindcss@3.1.8
   tailwindcss: 3.1.8_postcss@8.4.16
   typescript: 4.8.3
@@ -1268,6 +1270,12 @@ packages:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
     engines: {node: '>= 0.8.0'}
     dev: false
+
+  /prettier/2.7.1:
+    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
 
   /prismjs/1.29.0:
     resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
