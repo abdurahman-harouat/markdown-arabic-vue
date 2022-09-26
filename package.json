@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.11",
+    "@vueuse/core": "^9.3.0",
     "highlight.js": "^11.6.0",
     "isomorphic-dompurify": "^0.22.0",
     "lodash-es": "^4.17.21",
+    "markdown-it": "^13.0.1",
     "marked": "^4.1.0",
     "motion": "^10.14.2",
     "prismjs": "^1.29.0",
