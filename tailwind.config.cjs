@@ -15,7 +15,6 @@ darkMode: 'class',
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
     require('tailwind-scrollbar')
   ],
 }

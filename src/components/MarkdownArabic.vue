@@ -4,22 +4,7 @@ import { debounce } from "lodash-es";
 import DOMPurify from "isomorphic-dompurify";
 import { computed, watch, ref } from "vue";
 import { useLocalStorage } from "vue-composable";
-import { useDark, useToggle } from '@vueuse/core'
 import { animate } from "motion";
-
-import prism from "prismjs";
-import "prismjs/themes/prism-duotone-space.css";
-// ترقيم السطور
-import "prismjs/plugins/line-numbers/prism-line-numbers.js";
-import "prismjs/plugins/line-numbers/prism-line-numbers.css";
-
-import "prismjs/plugins/toolbar/prism-toolbar.js"; // required for the following plugins
-import "prismjs/plugins/toolbar/prism-toolbar.css"; // required for the following plugins
-import "prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"; // اظهار زر النسخ
-
-// This is needed if you have a conflict with other loaded CSS imports (i.e. tailwind).
-import "prismjs/plugins/custom-class/prism-custom-class";
-prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
 
 // importing icons
 import {
@@ -31,16 +16,6 @@ import {
    SunIcon
 } from "@heroicons/vue/24/outline";
 
-//marked Options => https://marked.js.org/using_advanced#options
-marked.use({
-   highlight: (code, lang) => {
-      if (prism.languages[lang]) {
-         return prism.highlight(code, prism.languages[lang], lang);
-      } else {
-         return code;
-      }
-   },
-});
 
 // اول شيء يطبع في الصفحة
 let input = ref<string>("# بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ");
@@ -50,30 +25,22 @@ let switchType = ref<string>("Editor");
 const key = ref<string>("__SavedArabicMarkdown");
 // i dont know yet what is this
 const tabSync = ref<boolean>(false);
-// dark mode
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
 
-
-
-const { supported, storage, setSync, remove } = $(useLocalStorage(
+const { supported, storage, setSync, remove } = useLocalStorage(
    key.value,
    input.value
-))
+)
 
 // watch
 watch(tabSync, setSync);
 
 // output input using computed function in vue
-const output = computed<string>(() => DOMPurify.sanitize(marked.parse(storage)));
+const output = computed<string>(() => DOMPurify.sanitize(marked.parse(storage.value)));
 
 // debounce input for 100 milisec to reduce overhead
 const update = debounce((e) => {
-   storage = e.target.value;
+   storage.value = e.target.value;
 }, 100);
-
-prism.highlightAll();
-
 
 // function that switch
 const switcher = () => {
@@ -91,39 +58,26 @@ const Animation = () => {
    );
 };
 
-/*const modalOpen = ref(false);*/
 
 </script>
 
 <template>
    <main
-      class="h-screen flex float-right w-screen m-0 bg-gray-200 box-border p-4 gap-4 font-tajawal"
+      class="h-screen flex float-right w-screen m-0 box-border p-4 gap-4 font-tajawal"
    >
       <!-- Toolbar -->
-      <aside class="w-20 bg-white dark:bg-slate-800 h-full justify-center text-center shadow-2xl">
+      <aside class="w-16 bg-white/80 dark:bg-slate-800 h-full justify-center text-center shadow-2xl">
+         
+         <!-- Switch between view/edit -->
          <button
-            class="bg-slate-800 dark:bg-white dark:text-slate-800 p-3 shadow-xl m-2 mt-5 text-white scaleAnimation dark:shadow-sm dark:shadow-white"
+            class="bg-lime-200 dark:bg-white dark:text-slate-800 p-2 shadow-xl m-2 mt-5 text-white scaleAnimation dark:shadow-sm dark:shadow-white"
             @click="
                switcher();
                Animation();
             "
          >
-            <PencilSquareIcon v-if="switchType == 'Viewer'" class="h-6 w-6" />
-            <EyeIcon v-if="switchType == 'Editor'" class="h-6 w-6" />
-         </button>
-<!--     <button
-            class="bg-slate-800 p-3 shadow-xl m-2 mt-5 text-white scaleAnimation"
-            @click="modalOpen = true"
-         >
-            <BookOpenIcon class="h-6 w-6" />
-         </button> -->
-
-         <button
-            class="bg-slate-800 dark:bg-white dark:text-slate-800 p-3 shadow-xl m-2 mt-5 text-white dark:shadow-sm dark:shadow-white"
-            @click="toggleDark()"
-         >
-         <MoonIcon v-if="isDark" class="h-6 w-6" />
-         <SunIcon v-else class="h-6 w-6" />
+            <PencilSquareIcon v-if="switchType == 'Viewer'" class="h-5 w-5 text-lime-900" />
+            <EyeIcon v-if="switchType == 'Editor'" class="h-5 w-5 text-lime-900" />
          </button>
 
       </aside>
@@ -131,7 +85,7 @@ const Animation = () => {
       <!-- Input -->
       <textarea
          v-if="switchType == 'Editor'"
-         class="bg-white dark:bg-slate-800 dark:text-white input overflow-auto border-none border-l-2 border-gray-500 bg-gray-100 resize-none outline-none text-lg p-8 box-border h-full w-full scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 overflow-y-scroll shadow-2xl"
+         class="bg-white/80 dark:bg-slate-800 dark:text-white input overflow-auto border-none border-l-2 border-gray-500 bg-gray-100 resize-none outline-none text-lg p-8 box-border h-full w-full scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 overflow-y-scroll shadow-2xl"
          :value="storage"
          @input="update"
          type="text"
@@ -141,29 +95,37 @@ const Animation = () => {
       <!-- Output -->
       <div
          v-if="switchType == 'Viewer'"
-         class="output overflow-auto prose max-w-none prose-lg prose-h1:font-blakaink prose-h1:text-yellow-900 prose-h1:text-7xl prose-h2:font-reemkufiink prose-h2:font-light prose-h2:text-6xl prose-h3:text-5xl prose-h4:text-4xl prose-h5:text-3xl prose-h6:text-2xl prose-p:text-xl prose-code:float-left line-numbers language-javascript p-4 box-border h-full w-full scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-300 overflow-y-scroll bg-white dark:bg-slate-800 shadow-2xl pl-5 dark:text-white"
+         class="output overflow-auto p-4 box-border h-full w-full scrollbar-thin scrollbar-thumb-lime-700 scrollbar-track-lime-300 overflow-y-scroll bg-white/90 dark:bg-slate-800 shadow-2xl pl-5 dark:text-white"
          v-html="output"
          dir="rtl"
       ></div>
 
-      <!-- Modal -->
-<!--       <Teleport to="body">
-         <div
-            class="fixed top-0 right-0 left-0 flex justify-center"
-            v-if="modalOpen"
-         >
-            <div class="bg-white p-12 rounded-lg">
-               <button @click="modalOpen = false">
-                  <XMarkIcon class="h-6 w-6" />
-               </button>
-            </div>
-         </div>
-      </Teleport> -->
    </main>
 </template>
 
-<style>
-code {
-   direction: ltr;
+<style scoped>
+main :deep(h1) {
+  @apply text-4xl mb-2 mt-5 ;
+}
+
+main :deep(h2) {
+  @apply text-2xl mb-2 mt-7;
+}
+
+main :deep(h3) {
+  @apply text-xl mb-2 mt-7;
+}
+
+main :deep(pre) {
+  @apply bg-lime-900 shadow-lg rounded overflow-auto my-2 w-full text-white; 
+}
+
+main :deep(code) {
+  @apply float-left p-2 my-2 w-full whitespace-pre;
+  direction: ltr;
+  overflow-x: auto;
+}
+main :deep(strong) {
+  @apply px-2 py-1 bg-yellow-700 text-zinc-900 rounded;
 }
 </style>
