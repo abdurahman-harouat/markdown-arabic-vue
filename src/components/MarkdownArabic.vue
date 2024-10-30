@@ -1,131 +1,180 @@
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import { marked } from "marked";
-import { debounce } from "lodash-es";
 import DOMPurify from "isomorphic-dompurify";
-import { computed, watch, ref } from "vue";
-import { useLocalStorage } from "vue-composable";
+import { useLocalStorage } from "@vueuse/core";
 import { animate } from "motion";
-
-// importing icons
 import {
    PencilSquareIcon,
    EyeIcon,
-   BookOpenIcon,
-   XMarkIcon,
+   SunIcon,
    MoonIcon,
-   SunIcon
 } from "@heroicons/vue/24/outline";
 
+interface EditorState {
+   mode: "edit" | "preview";
+   content: string;
+   isDark: boolean;
+}
 
-// اول شيء يطبع في الصفحة
-let input = ref<string>("# بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ");
-// switch between Editing and viewing
-let switchType = ref<string>("Editor");
-// localstorage
-const key = ref<string>("__SavedArabicMarkdown");
-// i dont know yet what is this
-const tabSync = ref<boolean>(false);
+// Constants
+const DEFAULT_CONTENT = "# بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ";
+const STORAGE_KEY = "arabic-markdown-content";
 
-const { supported, storage, setSync, remove } = useLocalStorage(
-   key.value,
-   input.value
-)
+// State management using composition API
+const state = useLocalStorage<EditorState>(STORAGE_KEY, {
+   mode: "edit",
+   content: DEFAULT_CONTENT,
+   isDark: window.matchMedia("(prefers-color-scheme: dark)").matches,
+});
 
-// watch
-watch(tabSync, setSync);
+// Initialize dark mode on page load
+if (state.value.isDark) {
+   document.documentElement.classList.add("dark");
+} else {
+   document.documentElement.classList.remove("dark");
+}
 
-// output input using computed function in vue
-const output = computed<string>(() => DOMPurify.sanitize(marked.parse(storage.value)));
+// Computed properties
+const parsedContent = computed(() =>
+   DOMPurify.sanitize(marked.parse(state.value.content))
+);
 
-// debounce input for 100 milisec to reduce overhead
-const update = debounce((e) => {
-   storage.value = e.target.value;
-}, 100);
+const isPreviewMode = computed(() => state.value.mode === "preview");
 
-// function that switch
-const switcher = () => {
-   switchType.value = switchType.value === "Editor" ? "Viewer" : "Editor";
+// Methods
+const toggleMode = () => {
+   state.value.mode = state.value.mode === "edit" ? "preview" : "edit";
+   animateTransition();
 };
 
-const Animation = () => {
+const toggleDarkMode = () => {
+   state.value.isDark = !state.value.isDark;
+   if (state.value.isDark) {
+      document.documentElement.classList.add("dark");
+   } else {
+      document.documentElement.classList.remove("dark");
+   }
+   animateTransition();
+};
+
+const updateContent = (event: Event) => {
+   const target = event.target as HTMLTextAreaElement;
+   state.value.content = target.value;
+};
+
+const animateTransition = () => {
    animate(
-      ".scaleAnimation",
+      ".scale-animation",
       { scale: [0.9, 1] },
       {
-         duration: 0.5,
+         duration: 0.3,
          easing: "ease-out",
       }
    );
 };
-
-
 </script>
 
 <template>
    <main
-      class="h-screen flex float-right w-screen m-0 box-border p-4 gap-4 font-tajawal"
+      class="min-h-screen flex bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
    >
       <!-- Toolbar -->
-      <aside class="w-16 bg-white/80 dark:bg-slate-800 h-full justify-center text-center shadow-2xl">
-         
-         <!-- Switch between view/edit -->
+      <aside
+         class="w-16 bg-white dark:bg-gray-800 shadow-lg flex flex-col items-center py-4 transition-colors duration-300"
+      >
+         <!-- Edit/Preview Toggle -->
          <button
-            class="bg-lime-200 dark:bg-white dark:text-slate-800 p-2 shadow-xl m-2 mt-5 text-white scaleAnimation dark:shadow-sm dark:shadow-white"
-            @click="
-               switcher();
-               Animation();
-            "
+            @click="toggleMode"
+            class="p-3 rounded-lg bg-lime-100 hover:bg-lime-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 scale-animation mb-4"
+            :title="isPreviewMode ? 'Switch to Editor' : 'Switch to Preview'"
          >
-            <PencilSquareIcon v-if="switchType == 'Viewer'" class="h-5 w-5 text-lime-900" />
-            <EyeIcon v-if="switchType == 'Editor'" class="h-5 w-5 text-lime-900" />
+            <component
+               :is="isPreviewMode ? PencilSquareIcon : EyeIcon"
+               class="h-5 w-5 text-lime-700 dark:text-gray-200"
+            />
          </button>
 
+         <!-- Dark Mode Toggle -->
+         <button
+            @click="toggleDarkMode"
+            class="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors duration-200 scale-animation"
+            :title="
+               state.isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'
+            "
+         >
+            <component
+               :is="state.isDark ? SunIcon : MoonIcon"
+               class="h-5 w-5 text-gray-700 dark:text-yellow-300"
+            />
+         </button>
       </aside>
 
-      <!-- Input -->
-      <textarea
-         v-if="switchType == 'Editor'"
-         class="bg-white/80 dark:bg-slate-800 dark:text-white input overflow-auto border-none border-l-2 border-gray-500 bg-gray-100 resize-none outline-none text-lg p-8 box-border h-full w-full scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300 overflow-y-scroll shadow-2xl"
-         :value="storage"
-         @input="update"
-         type="text"
-         dir="auto"
-      ></textarea>
+      <!-- Main Content Area -->
+      <div class="flex-1 p-4">
+         <!-- Editor -->
+         <textarea
+            v-if="!isPreviewMode"
+            v-model="state.content"
+            @input="updateContent"
+            class="w-full h-full min-h-[calc(100vh-2rem)] p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg outline-none resize-none text-lg dark:text-gray-200 font-tajawal scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 focus:ring-2 focus:ring-lime-500 dark:focus:ring-lime-400 transition-colors duration-300"
+            dir="auto"
+            spellcheck="false"
+         />
 
-      <!-- Output -->
-      <div
-         v-if="switchType == 'Viewer'"
-         class="output overflow-auto p-4 box-border h-full w-full scrollbar-thin scrollbar-thumb-lime-700 scrollbar-track-lime-300 overflow-y-scroll bg-white/90 dark:bg-slate-800 shadow-2xl pl-5 dark:text-white"
-         v-html="output"
-         dir="rtl"
-      ></div>
-
+         <!-- Preview -->
+         <div
+            v-else
+            class="w-full h-full min-h-[calc(100vh-2rem)] p-6 bg-white dark:bg-gray-800 dark:text-white rounded-lg shadow-lg prose dark:prose-invert prose-lg max-w-none overflow-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 transition-colors duration-300 font-tajawal"
+            v-html="parsedContent"
+            dir="rtl"
+         />
+      </div>
    </main>
 </template>
 
-<style scoped>
-main :deep(h1) {
-  @apply text-4xl mb-2 mt-5 ;
+<style>
+/* Base styles for markdown content */
+.prose h1 {
+   @apply text-4xl font-bold mb-4 mt-6;
 }
 
-main :deep(h2) {
-  @apply text-2xl mb-2 mt-7;
+.prose h2 {
+   @apply text-3xl font-bold mb-3 mt-8;
 }
 
-main :deep(h3) {
-  @apply text-xl mb-2 mt-7;
+.prose h3 {
+   @apply text-2xl font-bold mb-3 mt-6;
 }
 
-main :deep(pre) {
-  @apply bg-lime-900 shadow-lg rounded overflow-auto my-2 w-full text-white; 
+.prose pre {
+   @apply bg-gray-800 dark:bg-gray-900 rounded-lg p-4 my-4 overflow-x-auto;
 }
 
-main :deep(code) {
-  @apply float-left p-2 my-2 w-full whitespace-pre;
-  direction: ltr;
-  overflow-x: auto;
+.prose code {
+   @apply font-mono text-sm px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded;
 }
-main :deep(strong) {
-  @apply px-2 py-1 bg-yellow-700 text-zinc-900 rounded;
+
+.prose pre code {
+   @apply block p-0 bg-transparent text-gray-200;
+}
+
+.prose strong {
+   @apply px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900 rounded text-gray-900 dark:text-gray-100;
+}
+
+/* Custom scrollbar */
+.scrollbar-thin {
+   scrollbar-width: thin;
+}
+
+.scrollbar-thumb-gray-400::-webkit-scrollbar-thumb {
+   background-color: #9ca3af;
+   border-radius: 0.25rem;
+}
+
+.scrollbar-thumb-gray-600::-webkit-scrollbar-thumb {
+   background-color: #4b5563;
+   border-radius: 0.25rem;
 }
 </style>

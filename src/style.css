@@ -2,47 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-  @font-face {
-    font-family:  'Tajawal';
-    src:  url('/fonts/Tajawal/Tajawal-Regular.ttf');
-  }
-  @font-face {
-    font-family:  'Blaka INK';
-    src:  url('/fonts/Blaka_Ink/BlakaInk-Regular.ttf');
-  }
-  @font-face {
-    font-family:  'Reem Kufi Ink';
-    src:  url('/fonts/Reem_Kufi_Ink/ReemKufiInk-Regular.ttf');
-  }
+@layer base {
+   @font-face {
+      font-family: "Tajawal";
+      src: url("/fonts/Tajawal/Tajawal-Regular.ttf");
+   }
+   @font-face {
+      font-family: "Blaka INK";
+      src: url("/fonts/Blaka_Ink/BlakaInk-Regular.ttf");
+   }
+   @font-face {
+      font-family: "Reem Kufi Ink";
+      src: url("/fonts/Reem_Kufi_Ink/ReemKufiInk-Regular.ttf");
+   }
 }
-
 
 body {
-  direction: rtl;
+   direction: rtl;
 }
 
-  html {
-    height: 100%;
-    background: url(/img/background.png) repeat center center fixed; 
+html {
+   height: 100%;
 }
 /* width */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+   width: 8px;
+   height: 8px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  @apply bg-zinc-900;
+   @apply bg-zinc-900;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  @apply bg-zinc-700
+   @apply bg-zinc-700;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-zinc-800
+   @apply bg-zinc-800;
 }
